@@ -79,8 +79,7 @@ ingreso_usuario = False
 llego_a_meta = False
 
 
-
-#
+#banderas para los ultimos rectangulos
 bandera_anteultimo_fila_arriba = False
 bandera_ultimo_fila_arriba = False
 #para validar las respuestas
@@ -129,7 +128,6 @@ while correr:
                     segundos = 5
         if evento.type == pygame.MOUSEBUTTONDOWN:
             posicion = list(evento.pos)
-            print(posicion)
             if verificar_apreto(surface_boton_comenzar,posicion):
                 comenzar = True
                 segundos = 5
@@ -143,7 +141,6 @@ while correr:
                 bandera_fila_abajo =False
                 bandera_fila_arriba = True
                 llego_a_meta =False
-                moviendo =False
             
             if comenzar:
                 #verificar la respuesta y me devuelve un bool
@@ -197,9 +194,14 @@ while correr:
     if bandera_anteultimo_fila_arriba and respuesta_correcta:
         posicion_y_alumno = 450
         posicion_x_alumno = 770
+        bandera_fila_arriba = False
+        bandera_fila_abajo = True
     if bandera_ultimo_fila_arriba and respuesta_correcta:
         posicion_y_alumno = 450
         posicion_x_alumno = 670
+        bandera_fila_arriba = False
+        bandera_fila_abajo = True
+    
     bandera_ultimo_fila_arriba = False
     bandera_anteultimo_fila_arriba  = False
 
