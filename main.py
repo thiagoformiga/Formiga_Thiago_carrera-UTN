@@ -62,7 +62,13 @@ bandera_avanza_uno = False
 surface_retrocede_uno = crear_boton_texto(surface_pantalla,AZULCLARO,405,450,80,50,"Retrocede",BLACK,(405,450),"Arial",10)
 bandera_retrocede_uno = False
 #################################################################################################
-
+#MUSICA
+pygame.mixer.init()
+pygame.mixer.music.load("musicagame.mp3")
+# Establecer volumen
+volumen = 0.12
+pygame.mixer.music.set_volume(volumen)
+pygame.mixer.music.play(-1)
 
 
 #imagen llegada
@@ -74,9 +80,9 @@ llego_a_meta = False
 
 
 
-
-
-
+#
+bandera_anteultimo_fila_arriba = False
+bandera_ultimo_fila_arriba = False
 #para validar las respuestas
 respuesta_correcta = False
 respuesta_incorrecta = False
@@ -188,36 +194,57 @@ while correr:
     if posicion_x_alumno < 80:
         posicion_x_alumno = 80
     #para cuando se vaya del final de la fila de arriba
-    if posicion_x_alumno>800 and bandera_fila_arriba:
+    if bandera_anteultimo_fila_arriba and respuesta_correcta:
         posicion_y_alumno = 450
         posicion_x_alumno = 770
-        bandera_fila_arriba = False
-        bandera_fila_abajo = True   
-    #para cuando se vaya del final de la fila de arriba
+    if bandera_ultimo_fila_arriba and respuesta_correcta:
+        posicion_y_alumno = 450
+        posicion_x_alumno = 670
+    bandera_ultimo_fila_arriba = False
+    bandera_anteultimo_fila_arriba  = False
+
+    # para cuando se vaya del final de la fila de abajo
     if posicion_x_alumno>790 and bandera_fila_abajo:
         bandera_fila_arriba = True
         bandera_fila_abajo = False
         posicion_y_alumno = 350
         posicion_x_alumno = 770
-    #avanza uno
+    # avanza uno
     if posicion_x_alumno > 545 and posicion_x_alumno<658 and posicion_y_alumno>345 and posicion_y_alumno<400 and  bandera_avanza_uno == False:
         posicion_x_alumno += 95
         bandera_avanza_uno = True
     #retrocede uno
     if posicion_x_alumno > 405 and posicion_x_alumno<455 and posicion_y_alumno>410 and  posicion_y_alumno<500 and  bandera_retrocede_uno == False:
         if respuesta_correcta:
-            print("retrocede uno")
+            print("retrocede dos")
             posicion_x_alumno += 160
+        elif respuesta_incorrecta:
+            print("retrocede uno")
+            posicion_x_alumno += 80
         bandera_retrocede_uno = True
-    #en caso de que llegue al final
+    
+
+
+    #en caso de que llegue al meta
     if posicion_x_alumno < 140 and bandera_fila_abajo:
         bandera_finalizo = True
         llego_a_meta = False
         comenzar = False
+    
+    #ultimos dos cuadrados
+    if posicion_x_alumno > 660 and posicion_x_alumno<740 and posicion_y_alumno>340 and posicion_y_alumno < 400:
+        bandera_anteultimo_fila_arriba = True
+    if posicion_x_alumno > 745 and posicion_x_alumno<820 and posicion_y_alumno>340 and posicion_y_alumno < 400:
+        bandera_ultimo_fila_arriba = True
+    
+    
+    
 
+    #restablesco las resupuestas
     respuesta_incorrecta = False
-    respuesta_correcta = False  
-
+    respuesta_correcta = False 
+    
+    #vuelvo en bucle las preguntas
     if contador_indice < len(lista_preguntas):
         pass
     else:
@@ -246,7 +273,7 @@ while correr:
         #cuadrados del movimiento
         crear_rectangulos_movimiento(surface_pantalla)
         #imagen personaje
-        crear_texto_pantalla(surface_pantalla,"SAlIDA",BLACK,(75,360),"Arial",30)
+        crear_texto_pantalla(surface_pantalla,"SALIDA",BLACK,(75,360),"Arial",20)
         cargar_imagen("zalumno.png",surface_pantalla,(50,50),[posicion_x_alumno,posicion_y_alumno])
     
     if bandera_finalizo and ingreso_usuario != True:
@@ -265,5 +292,5 @@ while correr:
         crear_boton_texto(surface_pantalla,AZULCLARO,152,568,270,80,"Comenzar",BLACK,(185,570),"impact",50)
         crear_boton_texto(surface_pantalla,AZULCLARO,430,568,270,80,"Terminar",BLACK,(470,570),"impact",50)
     pygame.display.flip()
-
+pygame.mixer.music.stop()
 pygame.quit()
